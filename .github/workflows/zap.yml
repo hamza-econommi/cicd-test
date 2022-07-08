@@ -1,18 +1,15 @@
-on: [push]
+name: zapfull-security-scan
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
-  zap_scan:
+  build:
     runs-on: ubuntu-latest
-    name: Scan the webapplication
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          ref: master
-      - name: ZAP Scan
-        uses: zaproxy/action-full-scan@v0.4.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          docker_name: 'owasp/zap2docker-stable'
-          target: 'https://www.zaproxy.org/'
-          cmd_options: '-a'
+    steps:     
+    - name: OWASP ZAP Full Scan
+      uses: zaproxy/action-full-scan@v0.1.0
+      with:
+        target: "https://www.google.com"
