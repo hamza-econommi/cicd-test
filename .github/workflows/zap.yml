@@ -11,7 +11,7 @@ jobs:
          with:
           ref: master
        - name: Building Docker Node-Goat Image
-         run: docker build - < Dockerfile test
+         run: docker build . test
        - name: Launching the app
          run: docker run -d -p 8000:5000 test
 
