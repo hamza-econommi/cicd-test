@@ -1,0 +1,29 @@
+on:
+  push: { main }
+
+jobs:
+  depchecktest:
+    runs-on: ubuntu-latest
+    name: depecheck_test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Building Docker Image
+         run: docker-compose build
+       - name: Launching the app
+         run: docker-compose up --detach
+      - name: Depcheck
+        uses: dependency-check/Dependency-Check_Action@main
+        id: Depcheck
+        with:
+          project: 'test'
+          path: '.'
+          format: 'HTML'    
+          args: >
+            --failOnCVSS 7
+            --enableRetired
+      - name: Upload Test results
+        uses: actions/upload-artifact@main
+        with:
+           name: Depcheck report
+           path: ${{github.workspace}}/reports
