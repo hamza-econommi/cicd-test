@@ -9,9 +9,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Building Docker Image
-         run: docker-compose build
-       - name: Launching the app
-         run: docker-compose up --detach
+        run: docker-compose build
+      - name: Launching the app
+        run: docker-compose up --detach
       - name: Depcheck
         uses: dependency-check/Dependency-Check_Action@main
         id: Depcheck
