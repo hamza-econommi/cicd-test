@@ -1,28 +1,33 @@
-name: Check notification
-
-on:
-  push: { main }
-
 jobs:
-  success:
-    name: One with everything
-    runs-on: ubuntu-18.04
+  build:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - name: Microsoft Teams Notification
-        uses: skitionek/notify-microsoft-teams@master
-        if: always()
+     ....
+     ....
+      - name: Karate DSL Test Reports
+        uses: actions/upload-artifact@v2
+        if: ${{ always() }}
         with:
-          webhook_url: ${{ secrets.MSTEAMS_WEBHOOK }}
-          overwrite: "{title: `Overwrote title in ${workflow_link}`}"
-
-  if_failure:
-    name: Only if failure
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: actions/checkout@master
-      - name: Microsoft Teams Notification
-        uses: skitionek/notify-microsoft-teams@master
-        if: failure()
+          name: Test Reports
+          path: | 
+            ./target/karate-reports/
+            ./target/karate.log
+            retention-days: 30
+      - name: Notify dedicated teams channel
+        if: ${{ success() }}
+        uses: jdcargile/ms-teams-notification@v1.3
         with:
-          webhook_url: ${{ secrets.MSTEAMS_WEBHOOK }}
+          github-token: ${{ github.token }} 
+          ms-teams-webhook-uri: ${{ secrets.MSTEAMS_WEBHOOK }}
+          notification-summary: API TEST EXECUTION REPORT - SUCCESSFUL
+          notification-color: 28a745
+          timezone: Europe/Copenhagen
+      - name: Notify dedicated teams channel
+        if: ${{ failure() }}
+        uses: jdcargile/ms-teams-notification@v1.3
+        with:
+          github-token: ${{ github.token }} 
+          ms-teams-webhook-uri: ${{ secrets.MSTEAMS_WEBHOOK }}
+          notification-summary:  API TEST EXECUTION REPORT - FAILURE
+          notification-color: dc3545
+          timezone: Europe/Copenhagen
