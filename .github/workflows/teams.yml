@@ -1,5 +1,3 @@
-name: Teams Notification
-
 jobs:
   build:
     runs-on: ubuntu-latest
