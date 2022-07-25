@@ -24,3 +24,14 @@ jobs:
            fail_action: false
            token: ${{ secrets.GITHUB_TOKEN }}
            issue_title: Security Tests
+  teams:
+    name: Teams Message
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@master
+      - name: Microsoft Teams Notification
+        uses: skitionek/notify-microsoft-teams@master
+        if: always()
+        with:
+          webhook_url: ${{ secrets.MSTEAMS_WEBHOOK }}
+          overwrite: "{title: `${{ github.job }} job of ${{ github.repository }} has ${{ job.status }}`}"
